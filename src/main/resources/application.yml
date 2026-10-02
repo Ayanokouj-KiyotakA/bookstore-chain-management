@@ -2,14 +2,11 @@ server:
   port: 8080
 
 spring:
-  application:
-    name: bookstore-chain
-
   datasource:
-    url: jdbc:mysql://localhost:3306/bookstore_chain?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:sqlserver://localhost:1433;databaseName=bookstore_chain;encrypt=true;trustServerCertificate=true
+    username: sa
+    password: 123456
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
   jpa:
     hibernate:
@@ -18,7 +15,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    open-in-view: false
+        dialect: org.hibernate.dialect.SQLServerDialect
+        use_nationalized_character_data: true
 
   mvc:
     view:
@@ -27,10 +25,5 @@ spring:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:change-this-to-a-long-random-secret-at-least-32-characters}
+    secret: bookstore-chain-management-jwt-secret-key-2026
     expiration-ms: 86400000
-
-cloudinary:
-  cloud-name: ${CLOUDINARY_CLOUD_NAME:}
-  api-key: ${CLOUDINARY_API_KEY:}
-  api-secret: ${CLOUDINARY_API_SECRET:}
