@@ -1,5 +1,7 @@
 package com.bookstorechain.entity;
 
+import com.bookstorechain.enums.Role;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class User extends BaseEntity {
 
     @Column(nullable = false, unique = true, length = 50)
@@ -36,4 +39,7 @@ public class User extends BaseEntity {
     private boolean isActive = true;
 
     // Quan hệ với Store sẽ bổ sung khi tạo entity Store
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private Store store;
 }

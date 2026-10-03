@@ -1,7 +1,7 @@
 package com.bookstorechain.controller.api;
 
-import com.bookstorechain.entity.Role;
 import com.bookstorechain.entity.User;
+import com.bookstorechain.enums.Role;
 import com.bookstorechain.repository.UserRepository;
 import com.bookstorechain.security.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,7 +1,10 @@
 package com.bookstorechain.config;
 
-import com.bookstorechain.entity.Role;
+import com.bookstorechain.entity.Store;
+
 import com.bookstorechain.entity.User;
+import com.bookstorechain.enums.Role;
+import com.bookstorechain.repository.StoreRepository;
 import com.bookstorechain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,17 +18,33 @@ import org.springframework.stereotype.Component;
 public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
+    private final StoreRepository storeRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) {
+        Store defaultStore = initDefaultStore();
         initDefaultAdmin();
-        initDefaultStaff();
+        initDefaultStaff(defaultStore);
+    }
+
+    private Store initDefaultStore() {
+        return storeRepository.findByName("Chi Nhánh Trung Tâm - Hà Nội")
+                .orElseGet(() -> {
+                    Store store = Store.builder()
+                            .name("Chi Nhánh Trung Tâm - Hà Nội")
+                            .address("Số 123 Đường Cầu Giấy, Quận Cầu Giấy, Hà Nội")
+                            .phone("02412345678")
+                            .isActive(true)
+                            .build();
+                    Store saved = storeRepository.save(store);
+                    log.info(">>> Đã khởi tạo STORE mặc định: {}", saved.getName());
+                    return saved;
+                });
     }
 
     private void initDefaultAdmin() {
         if (!userRepository.existsByUsername("admin")) {
-
             User admin = User.builder()
                     .username("admin")
                     .password(passwordEncoder.encode("admin123"))
@@ -37,14 +56,12 @@ public class DataInitializer implements CommandLineRunner {
                     .build();
 
             userRepository.save(admin);
-
             log.info(">>> Đã khởi tạo tài khoản ADMIN mặc định: admin / admin123");
         }
     }
 
-    private void initDefaultStaff() {
+    private void initDefaultStaff(Store store) {
         if (!userRepository.existsByUsername("staff")) {
-
             User staff = User.builder()
                     .username("staff")
                     .password(passwordEncoder.encode("staff123"))
@@ -52,12 +69,12 @@ public class DataInitializer implements CommandLineRunner {
                     .email("staff@bookstorechain.com")
                     .phone("0907654321")
                     .role(Role.STAFF)
+                    .store(store)
                     .isActive(true)
                     .build();
 
             userRepository.save(staff);
-
-            log.info(">>> Đã khởi tạo tài khoản STAFF mặc định: staff / staff123");
+            log.info(">>> Đã khởi tạo tài khoản STAFF mặc định thuộc Store: {}", store.getName());
         }
     }
 }

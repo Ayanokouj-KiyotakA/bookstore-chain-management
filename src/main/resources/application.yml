@@ -1,29 +1,44 @@
 server:
-  port: 8080
+    port: 8080
 
 spring:
-  datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=bookstore_chain;encrypt=true;trustServerCertificate=true
-    username: sa
-    password: 123456
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    datasource:
+        url: jdbc:sqlserver://localhost:1433;databaseName=bookstore_chain;encrypt=true;trustServerCertificate=true
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.SQLServerDialect
-        use_nationalized_character_data: true
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+                dialect: org.hibernate.dialect.SQLServerDialect
+                use_nationalized_character_data: true
 
-  mvc:
-    view:
-      prefix: /WEB-INF/views/
-      suffix: .jsp
+    mvc:
+        view:
+            prefix: /WEB-INF/views/
+            suffix: .jsp
+
+    servlet:
+        multipart:
+            max-file-size: 5MB
+            max-request-size: 20MB
 
 app:
-  jwt:
-    secret: bookstore-chain-management-jwt-secret-key-2026
-    expiration-ms: 86400000
+    jwt:
+        secret: ${JWT_SECRET}
+        expiration-ms: 86400000
+
+cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}
+
+
+logging:
+    level:
+        org.springframework.security: DEBUG
